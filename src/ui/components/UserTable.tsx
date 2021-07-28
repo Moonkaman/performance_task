@@ -1,7 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Filter from './Filter';
 
 const UserTable: React.FC = () => {
+
+    useEffect(() => {
+        fetch('./users.json')
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+    }, []);
 
     const handleEditUser = () => {
         console.log('');
