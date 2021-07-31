@@ -5,6 +5,7 @@ import UserListItem from './UserListItem';
 
 const UserTable: React.FC = () => {
     const [usersData, setUsersData] = useState<User[] | []>([]);
+    const [filteredUsers, setFilteredUsers] = useState<User[] | null>(null);
 
     useEffect(() => {
         fetch('./users.json')
@@ -21,9 +22,17 @@ const UserTable: React.FC = () => {
         console.log('');
     };
 
+    const filterUsers = (options: {district: number, active: boolean}) => {
+        setFilteredUsers(usersData.filter(user => {
+            if (user.active === options.active && user.district === options.district) {
+                return user;
+            }
+        }));
+    };
+
     return (
         <div className="admin-user-table" style={{marginTop: '7rem'}}>
-            <Filter />
+            <Filter filterUsers={filterUsers} />
             
             <div style={{border: '1px solid black', width: '50rem', marginTop: '2rem'}}>
                 <h2 style={{textAlign: 'center', textDecoration: 'underline'}}>Users</h2>
@@ -39,7 +48,13 @@ const UserTable: React.FC = () => {
                             <div style={{width: '20%'}}>Created</div>
                         </div>
                     </li>
-                    {usersData.map(user => <UserListItem key={user.id} userData={user} />)}
+                    {
+                        filteredUsers ? (
+                            filteredUsers.map(user => <UserListItem key={user.id} userData={user} />)
+                        ) : (
+                            usersData.map(user => <UserListItem key={user.id} userData={user} />)
+                        )
+                    }
                 </ul>
             </div>
         </div>
