@@ -42,12 +42,12 @@ const Filter: React.FC<Props> = ({filterUsers}: Props) => {
         <div className="filter-cont">
             <label htmlFor="district">Filter by District: </label>
             <Form.Group>
-                <Form.Select style={{marginRight: "1rem"}} className="filter-select" name="districtInput" value={state.districtInput} onChange={handleChange}>
+                <Form.Select aria-label="District filter select" style={{marginRight: "1rem"}} className="filter-select" name="districtInput" value={state.districtInput} onChange={handleChange}>
                     <option value="1">District One</option>
                     <option value="2">District Two</option>
                 </Form.Select>
                 <label htmlFor="activeUsers">Active Users Only: </label>
-                <Form.Check type="checkbox" name="activeToggle" checked={state.activeToggle} onChange={handleChange} />
+                <Form.Check aria-label="Filter by active users check box" type="checkbox" name="activeToggle" checked={state.activeToggle} onChange={handleChange} />
             </Form.Group>
         </div>
     );
