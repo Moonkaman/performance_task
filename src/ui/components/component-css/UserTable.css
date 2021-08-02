@@ -1,0 +1,12 @@
+.user-table-cont {
+  border: 1px solid #d6d6d6;
+  border-radius: 5px;
+  width: 50rem;
+  margin-top: 2rem;
+  min-width: 80vw;
+  padding: 2rem;
+}
+
+.user-table-cont h2 {
+  
+}

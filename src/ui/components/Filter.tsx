@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
 
 interface Props {
     filterUsers: (options: {district: number, active: boolean}) => void
@@ -21,7 +22,7 @@ const Filter: React.FC<Props> = ({filterUsers}: Props) => {
         filterUsers({district: state.districtInput, active: state.activeToggle});
     }, [state]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLSelectElement> | any) => {
         setState(state => {
             if (e.target.type === 'checkbox') {
                 return {
@@ -38,15 +39,16 @@ const Filter: React.FC<Props> = ({filterUsers}: Props) => {
     };
 
     return (
-        <div>
+        <div className="filter-cont">
             <label htmlFor="district">Filter by District: </label>
-            <select name="districtInput" value={state.districtInput} onChange={handleChange}>
-                <option value="1">District One</option>
-                <option value="2">District Two</option>
-            </select>
-            <br/>
-            <label htmlFor="activeUsers">Active Users Only: </label>
-            <input type="checkbox" name="activeToggle" checked={state.activeToggle} onChange={handleChange} />
+            <Form.Group>
+                <Form.Select style={{marginRight: "1rem"}} className="filter-select" name="districtInput" value={state.districtInput} onChange={handleChange}>
+                    <option value="1">District One</option>
+                    <option value="2">District Two</option>
+                </Form.Select>
+                <label htmlFor="activeUsers">Active Users Only: </label>
+                <Form.Check type="checkbox" name="activeToggle" checked={state.activeToggle} onChange={handleChange} />
+            </Form.Group>
         </div>
     );
 };
