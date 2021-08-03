@@ -1,6 +1,5 @@
 import React from 'react';
-import { ListGroupItem, Popover, Button, OverlayTrigger } from 'react-bootstrap';
-import { FiEdit } from 'react-icons/fi';
+import { ListGroupItem, Button} from 'react-bootstrap';
 
 import './component-css/UserListItem.css';
 
