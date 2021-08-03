@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { Card, ListGroup } from 'react-bootstrap';
+import { Card, ListGroup, Button } from 'react-bootstrap';
 
 import './component-css/UserTable.css';
 
 import Filter from './Filter';
 import UserListItem from './UserListItem';
 import ConfirmationModal from './ConfirmationModal';
+import NewUser from '../forms/NewUser';
 
-interface ModalState {
+interface ConfirmationModalState {
     shown: boolean;
     modalText: string;
     modalButtonText: {
@@ -18,14 +19,29 @@ interface ModalState {
     onConfirm?: any;
 }
 
+interface UserModalState {
+    shown: boolean,
+    onConfirm?: any,
+    selectedUser?: User
+}
+
 const UserTable: React.FC = () => {
     const [usersData, setUsersData] = useState<User[] | []>([]);
     const [filteredUsers, setFilteredUsers] = useState<User[] | null>(null);
-    const [confirmationModalState, setConfirmationModalState] = useState<ModalState>({
-        shown: true,
+    const [currentFilterSettings, setCurrentFilterSettings] = useState({
+        district: 1,
+        active: true
+    });
+
+    const [confirmationModalState, setConfirmationModalState] = useState<ConfirmationModalState>({
+        shown: false,
         modalText: "Test modal text",
         modalButtonText: {confirm: "Delete", cancel: "Cancel"},
         modalPrimaryButtonVariant: "danger"
+    });
+
+    const [userModalState, setUserModalState] = useState<UserModalState>({
+        shown: false,
     });
 
     useEffect(() => {
@@ -39,8 +55,13 @@ const UserTable: React.FC = () => {
         filterUsers({district: 1, active: false});
     }, [usersData]);
 
-    const handleEditUser = () => {
-        console.log('');
+    const handleEditUser = (user: User) => {
+        setUserModalState({
+            ...userModalState,
+            selectedUser: user,
+            shown: true,
+            onConfirm: editUser
+        });
     };
 
     const handleDeleteUser = (uid: number) => {
@@ -51,18 +72,52 @@ const UserTable: React.FC = () => {
             modalText: `Are you sure you want to delete user id:${uid}`,
             onConfirm: () => {
                 deleteUser(uid);
-                console.log("Click");
             }
         });
     };
 
     const deleteUser = (uid: number) => {
         setUsersData(usersData.filter(user => user.id !== uid));
-        setFilteredUsers(usersData.filter(user => user.id !== uid));
+        filterUsers(currentFilterSettings);
+    };
+
+    const createUser = (userInfo: UserInfo) => {
+        const id = usersData.length;
+        const newUser = {
+            created_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+            email: userInfo.email,
+            first_name: userInfo.firstName,
+            last_name: userInfo.lastName,
+            active: userInfo.active,
+            id,
+            district: userInfo.district,
+            middle_initial: userInfo.middleInitial ? userInfo.middleInitial : null,
+            verified: false
+        };
+
+        setUsersData([
+            ...usersData,
+            newUser    
+        ]);
+        
+        filterUsers(currentFilterSettings);
+    };
+
+    const editUser = (updatedUserInfo: User) => {
+        setUsersData(usersData.map(user => {
+            if (updatedUserInfo.id === user.id) {
+                return {
+                    ...updatedUserInfo
+                };
+            } else {
+                return user;
+            }
+        }));
+        filterUsers(currentFilterSettings);
     };
 
     const filterUsers = (options: {district: number, active: boolean}) => {
-        console.log("Filtering for district " + options.district);
+        setCurrentFilterSettings(options);
         setFilteredUsers(usersData.filter(user => {
             if (user.active === options.active && user.district === options.district) {
                 return user;
@@ -70,8 +125,12 @@ const UserTable: React.FC = () => {
         }));
     };
 
-    const handleModalClose = () => {
+    const handleConfirmationModalClose = () => {
         setConfirmationModalState({...confirmationModalState, shown: false});
+    };
+
+    const handleUserModalClose = () => {
+        setUserModalState({...userModalState, shown: false});
     };
 
     return (
@@ -81,15 +140,25 @@ const UserTable: React.FC = () => {
                 modalButtonText={confirmationModalState.modalButtonText}
                 modalText={confirmationModalState.modalText}
                 modalPrimaryButtonVariant={confirmationModalState.modalPrimaryButtonVariant}
-                close={handleModalClose}
+                close={handleConfirmationModalClose}
                 onConfirm={confirmationModalState.onConfirm}
+            />
+            <NewUser 
+                shown={userModalState.shown}
+                close={handleUserModalClose}
+                selectedUser={userModalState.selectedUser}
+                createUser={createUser}
+                editUser={editUser}
             />
             <Card className="admin-user-table" style={{marginTop: '7rem'}}>
                 <Card.Body>
                     <Filter filterUsers={filterUsers} />
                     
                     <div className='user-table-cont'>
-                        <h2>Users</h2>
+                        <div className="user-table-heading">
+                            <h2>Users</h2>
+                            <Button variant="success" onClick={() => setUserModalState({shown: true})}>Add new user</Button>
+                        </div>
                         <ListGroup variant="flush" style={{listStyle: 'none', paddingLeft: 0}}>
                             <ListGroup.Item style={{fontWeight: 700, borderBottom: '2px solid black', marginBottom: '1rem', padding: '1rem'}}>
                                 <div style={{display: 'flex', justifyContent: 'space-evenly', textAlign: 'center'}}>
@@ -104,9 +173,9 @@ const UserTable: React.FC = () => {
                             </ListGroup.Item>
                             {
                                 filteredUsers ? (
-                                    filteredUsers.map(user => <UserListItem key={user.id} userData={user} deleteUser={handleDeleteUser} />)
+                                    filteredUsers.map(user => <UserListItem key={user.id} userData={user} deleteUser={handleDeleteUser} editUser={handleEditUser}/>)
                                 ) : (
-                                    usersData.map(user => <UserListItem key={user.id} userData={user} deleteUser={handleDeleteUser} />)
+                                    usersData.map(user => <UserListItem key={user.id} userData={user} deleteUser={handleDeleteUser} editUser={handleEditUser}/>)
                                 )
                             }
                         </ListGroup>

@@ -7,6 +7,7 @@
   padding: 2rem;
 }
 
-.user-table-cont h2 {
-  
+.user-table-heading {
+  display: flex;
+  justify-content: space-between;
 }

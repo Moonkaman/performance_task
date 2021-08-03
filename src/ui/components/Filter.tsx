@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 
+import "./component-css/Filter.css";
+
 interface Props {
     filterUsers: (options: {district: number, active: boolean}) => void
 }
@@ -40,12 +42,14 @@ const Filter: React.FC<Props> = ({filterUsers}: Props) => {
 
     return (
         <div className="filter-cont">
-            <label htmlFor="district">Filter by District: </label>
-            <Form.Group>
+            <Form.Group className="select-form-group">
+                <label htmlFor="district">Filter by District: </label>
                 <Form.Select aria-label="District filter select" style={{marginRight: "1rem"}} className="filter-select" name="districtInput" value={state.districtInput} onChange={handleChange}>
                     <option value="1">District One</option>
                     <option value="2">District Two</option>
                 </Form.Select>
+            </Form.Group>
+            <Form.Group>
                 <label htmlFor="activeUsers">Active Users Only: </label>
                 <Form.Check aria-label="Filter by active users check box" type="checkbox" name="activeToggle" checked={state.activeToggle} onChange={handleChange} />
             </Form.Group>

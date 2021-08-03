@@ -1,0 +1,15 @@
+.edit-btns {
+  display: flex;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.2s ease;
+}
+
+.edit-btn {
+  margin-right: 0.4rem;
+}
+
+.list-group-item:hover .edit-btns {
+  width: 20%;
+}
+
