@@ -24,6 +24,7 @@ const Filter: React.FC<Props> = ({filterUsers}: Props) => {
         filterUsers({district: state.districtInput, active: state.activeToggle});
     }, [state]);
 
+    // React bootstrap doesn't use a defalut select element and I couldn't figure out what type the event was
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLSelectElement> | any) => {
         setState(state => {
             if (e.target.type === 'checkbox') {
@@ -44,6 +45,7 @@ const Filter: React.FC<Props> = ({filterUsers}: Props) => {
         <div className="filter-cont">
             <Form.Group className="select-form-group">
                 <label htmlFor="district">Filter by District: </label>
+                {/* This is the select element in question that I couldn't figure out the event type for */}
                 <Form.Select aria-label="District filter select" style={{marginRight: "1rem"}} className="filter-select" name="districtInput" value={state.districtInput} onChange={handleChange}>
                     <option value="1">District One</option>
                     <option value="2">District Two</option>

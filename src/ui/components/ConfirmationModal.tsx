@@ -16,10 +16,10 @@ const ConfirmationModal: React.FC<Props> = ({shown, modalText, modalButtonText, 
     return (
         <Modal centered show={shown} onHide={close}>
             <Modal.Header closeButton>
-                {modalHeader}
+                <Modal.Title>{modalHeader}</Modal.Title>    
             </Modal.Header>
             <Modal.Body>
-                {modalText}
+                <p aria-label={modalText} tabIndex={0}>{modalText}</p>
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={close} variant={"light"}>{modalButtonText.cancel}</Button>

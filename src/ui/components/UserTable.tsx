@@ -8,6 +8,8 @@ import UserListItem from './UserListItem';
 import ConfirmationModal from './ConfirmationModal';
 import NewUser from '../forms/NewUser';
 
+// The two any types in here I couldn't figure out because it's a function returning a funciton and I didn't know
+// how to represent that in typescript
 interface ConfirmationModalState {
     shown: boolean;
     modalText: string;
@@ -17,6 +19,7 @@ interface ConfirmationModalState {
     };
     modalPrimaryButtonVariant: string;
     onConfirm?: any;
+    modalHeader?: string;
 }
 
 interface UserModalState {
@@ -70,6 +73,7 @@ const UserTable: React.FC = () => {
             shown: true,
             modalButtonText: {confirm: "Delete User", cancel: "Cancel"},
             modalText: `Are you sure you want to delete user id:${uid}`,
+            modalHeader: 'Delete User',
             onConfirm: () => {
                 deleteUser(uid);
             }
@@ -142,6 +146,7 @@ const UserTable: React.FC = () => {
                 modalPrimaryButtonVariant={confirmationModalState.modalPrimaryButtonVariant}
                 close={handleConfirmationModalClose}
                 onConfirm={confirmationModalState.onConfirm}
+                modalHeader={confirmationModalState.modalHeader}
             />
             <NewUser 
                 shown={userModalState.shown}
